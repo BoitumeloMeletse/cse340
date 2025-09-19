@@ -9,6 +9,8 @@ const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 const env = require("dotenv").config()
 const static = require("./routes/static")
+const baseController = require("./controllers/baseController")
+const inventoryRoute = require("./routes/inventoryRoute")
 const app = express()
 
 /* ***********************
@@ -27,6 +29,35 @@ app.use(require("./routes/index"))
 // Index route
 app.get("/", (req, res) => {
   res.render("index", { title: "Home" })
+})
+
+// Inventory routes
+app.use("/inv", inventoryRoute)
+
+/* ***********************
+ * Global Error Handling Middleware (Task 2)
+ *************************/
+app.use(async (err, req, res, next) => {
+  console.error("Error occurred:", err.stack)
+
+  let nav = ""
+  try {
+    nav = await utilities.getNav()
+  } catch (navError) {
+    console.error("Error getting navigation:", navError)
+    nav = "<ul><li><a href='/'>Home</a></li></ul>"
+  }
+
+  const status = err.status || 500
+  const message = err.message || "Something went wrong. Please try again later."
+
+  res.status(status).render("errors/error", {
+    title: `Error ${status}`,
+    nav: nav,
+    message: message,
+    status: status,
+    layout: "./layouts/layout",
+  })
 })
 
 /* ***********************

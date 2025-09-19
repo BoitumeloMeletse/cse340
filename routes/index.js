@@ -1,12 +1,9 @@
 // routes/index.js
 const express = require("express")
+const baseController = require("../controllers/baseController")
 const router = express.Router()
 
-// Home page route
-router.get("/", (req, res) => {
-    res.render("index", { 
-      title: "Home",
-      nav: "<ul><li><a href='/'>Home</a></li><li><a href='/about'>About</a></li></ul>"
-    })
-  })
+// Index route
+router.get("/", baseController.buildHome)
+
 module.exports = router
