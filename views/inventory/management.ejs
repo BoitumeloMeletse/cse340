@@ -1,0 +1,142 @@
+
+  <div class="management-container">
+    <% if (title) { %>
+      <h1><%= title %></h1>
+    <% } %>
+    
+    <%- messages() %>
+    
+    <% if (errors) { %>
+      <ul class="notice">
+        <% errors.forEach(error => { %>
+          <li><%= error.msg %></li>
+        <% }) %>
+      </ul>
+    <% } %>
+  
+    <div class="management-actions">
+      <p><a href="/inv/add-classification">Add New Classification</a></p>
+      <p><a href="/inv/add-vehicle">Add New Vehicle</a></p>
+    </div>
+  
+    <h2>Manage Inventory</h2>
+    <p>Select a classification from the list to see the items belonging to the classification.</p>
+    
+    <%- classificationSelect %>
+    
+    <table id="inventoryDisplay"></table>
+    
+    <noscript>JavaScript must be enabled to use this page.</noscript>
+  </div>
+  
+  <script src="/js/inventory.js"></script>
+  
+  <style>
+  .management-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .management-actions {
+    margin: 20px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+  
+  .management-actions p {
+    margin: 10px 0;
+  }
+  
+  .management-actions a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .management-actions a:hover {
+    text-decoration: underline;
+  }
+  
+  #classificationList {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    margin: 20px 0;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  #inventoryDisplay {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  #inventoryDisplay th,
+  #inventoryDisplay td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  #inventoryDisplay th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  #inventoryDisplay tr:hover {
+    background-color: #f5f5f5;
+  }
+  
+  #inventoryDisplay a {
+    color: #007bff;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 14px;
+  }
+  
+  #inventoryDisplay a:hover {
+    background-color: #e9ecef;
+    text-decoration: underline;
+  }
+  
+  .notice {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    margin: 20px 0;
+  }
+  
+  .notice li {
+    margin: 5px 0;
+  }
+  
+  h2 {
+    color: #333;
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+  
+  noscript {
+    display: block;
+    background: #fff3cd;
+    color: #856404;
+    padding: 15px;
+    border: 1px solid #ffeaa7;
+    border-radius: 5px;
+    margin: 20px 0;
+    text-align: center;
+    font-weight: bold;
+  }
+  </style>
+  
+  
