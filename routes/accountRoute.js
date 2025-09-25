@@ -21,11 +21,10 @@ router.get("/login", utilities.handleErrors(accountController.buildLogin))
 /* *********************************
  * Process the login request
  * ********************************/
-router.post(
-    "/login",
-    regValidate.loginRules(),      // ✅
-    regValidate.checkLoginData,    // ✅ leave as is
-    utilities.handleErrors(accountController.accountLogin), // ✅ wrap only the controller
+router.post("/login",
+    regValidate.loginRules(),    // Remove handleErrors from here
+    regValidate.checkLoginData,  // Remove handleErrors from here
+    utilities.handleErrors(accountController.accountLogin)  // Keep only on controller
 )
 
 /* *********************************
@@ -38,9 +37,9 @@ router.get("/register", utilities.handleErrors(accountController.buildRegister))
  * ********************************/
 router.post(
   "/register",
-  regValidate.registrationRules(),
-  regValidate.checkRegData,
-  utilities.handleErrors(accountController.registerAccount),
+  regValidate.registrationRules(), // Remove handleErrors
+  regValidate.checkRegData,        // Remove handleErrors
+  utilities.handleErrors(accountController.registerAccount), // Keep only on controller
 )
 
 /* *********************************
@@ -53,9 +52,9 @@ router.get("/update/:account_id", utilities.checkLogin, utilities.handleErrors(a
  * ********************************/
 router.post(
   "/update",
-  regValidate.updateAccountRules(),
-  regValidate.checkUpdateData,
-  utilities.handleErrors(accountController.updateAccount),
+  regValidate.updateAccountRules(), // Remove handleErrors
+  regValidate.checkUpdateData,      // Remove handleErrors
+  utilities.handleErrors(accountController.updateAccount), // Keep only on controller
 )
 
 /* *********************************
@@ -63,9 +62,9 @@ router.post(
  * ********************************/
 router.post(
   "/update-password",
-  regValidate.updatePasswordRules(),
-  regValidate.checkPasswordData,
-  utilities.handleErrors(accountController.updatePassword),
+  regValidate.updatePasswordRules(), // Remove handleErrors
+  regValidate.checkPasswordData,     // Remove handleErrors
+  utilities.handleErrors(accountController.updatePassword), // Keep only on controller
 )
 
 /* *********************************

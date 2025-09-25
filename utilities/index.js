@@ -1,6 +1,6 @@
 const invModel = require("../models/inventory-model")
-//const jwt = require("jsonwebtoken")
-//require("dotenv").config()
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
 const Util = {}
 
 /* ************************
@@ -160,7 +160,7 @@ Util.checkJWTToken = (req, res, next) => {
   if (req.cookies.jwt) {
     jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET, (err, accountData) => {
       if (err) {
-        req.flash("Please log in")
+        req.flash("notice", "Please log in")
         res.clearCookie("jwt")
         return res.redirect("/account/login")
       }
@@ -173,17 +173,32 @@ Util.checkJWTToken = (req, res, next) => {
   }
 }
 
+
+
+// ... your existing utility functions ...
+
 /* ****************************************
- *  Check Login
+ *  Check Login (Session-based)
  * ************************************ */
 Util.checkLogin = (req, res, next) => {
-  if (res.locals.loggedin) {
+  console.log("Checking login status..."); // Debug log
+  console.log("Session data:", req.session); // Debug log
+  
+  if (req.session && req.session.accountData) {
+    res.locals.accountData = req.session.accountData
+    res.locals.loggedin = 1
+    console.log("User is logged in:", req.session.accountData.account_email); // Debug log
     next()
   } else {
+    console.log("User is NOT logged in"); // Debug log
     req.flash("notice", "Please log in.")
     return res.redirect("/account/login")
   }
 }
+
+
+
+
 
 /* ****************************************
  * Middleware to check for Admin or Employee

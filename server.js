@@ -49,6 +49,17 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 
+// Debug middleware
+app.use((req, res, next) => {
+  console.log('=== REQUEST DEBUG ===');
+  console.log('URL:', req.url);
+  console.log('Method:', req.method);
+  console.log('Session ID:', req.sessionID);
+  console.log('Session data:', req.session);
+  console.log('=====================');
+  next();
+});
+
 /* ***********************
  * Routes
  *************************/
