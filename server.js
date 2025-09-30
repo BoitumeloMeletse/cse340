@@ -6,6 +6,7 @@
  * Require Statements
  *************************/
 const express = require("express")
+const app = express()
 const expressLayouts = require("express-ejs-layouts")
 const env = require("dotenv").config()
 const static = require("./routes/static")
@@ -16,7 +17,8 @@ const accountRoute = require("./routes/accountRoute")
 const session = require("express-session")
 const pool = require('./database/')
 const bodyParser = require("body-parser")
-const app = express()
+const cookieParser = require("cookie-parser")
+
 
 /* ***********************
  * View Engine and Templates
@@ -34,10 +36,24 @@ app.use(session({
     pool,
   }),
   secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true,
+  resave: false, // recommended to set false
+  saveUninitialized: false, // recommended
   name: 'sessionId',
-}))
+  cookie: {
+    maxAge: 1000 * 60 * 60, // 1 hour in milliseconds
+    httpOnly: true,
+  }
+}));
+
+// Middleware to log expiration
+app.use((req, res, next) => {
+  if (req.session) {
+    const expireDate = new Date(Date.now() + req.session.cookie.maxAge);
+    console.log("Session will expire at:", expireDate);
+  }
+  next();
+});
+
 
 // Express Messages Middleware
 app.use(require('connect-flash')())
@@ -47,7 +63,11 @@ app.use(function(req, res, next){
 })
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(cookieParser())
 
+
+// ✅ Second: Cookies or JWT Middleware
+app.use(utilities.checkJWTToken)
 
 // Debug middleware
 app.use((req, res, next) => {
