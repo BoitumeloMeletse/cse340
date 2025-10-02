@@ -29,7 +29,7 @@ router.get(
 // Route to build edit inventory view (Admin/Employee only)
 router.get(
   "/edit/:inv_id",
-  utilities.checkJWTToken,
+  utilities.checkLogin, 
   utilities.checkAccountType,
   utilities.handleErrors(invController.editInventory)
 )
