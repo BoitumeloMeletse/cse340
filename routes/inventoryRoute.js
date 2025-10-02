@@ -25,11 +25,6 @@ router.get(
   utilities.handleErrors(invController.getInventoryJSON)
 )
 
-/*
-  Protected admin routes below.
-  Use checkJWTToken to populate res.locals.accountData from the jwt cookie (if present)
-  then enforce allowed roles using checkAccountType for admin operations.
-*/
 
 // Route to build edit inventory view (Admin/Employee only)
 router.get(
@@ -42,7 +37,7 @@ router.get(
 // Route to build inventory management view (Admin/Employee only)
 router.get(
   "/",
-  utilities.checkJWTToken,
+  utilities.checkLogin, 
   utilities.checkAccountType,
   utilities.handleErrors(invController.manageInventory)
 )
@@ -50,7 +45,7 @@ router.get(
 // Route to add classification view (Admin/Employee only)
 router.get(
   "/add-classification",
-  utilities.checkJWTToken,
+  utilities.checkLogin, 
   utilities.checkAccountType,
   utilities.handleErrors(invController.addClassification)
 )
@@ -58,7 +53,7 @@ router.get(
 // Route to add classification post (Admin/Employee only)
 router.post(
   "/add-classification",
-  utilities.checkJWTToken,
+  utilities.checkLogin, 
   utilities.checkAccountType,
   utilities.handleErrors(invController.addVehicleByClassificationName)
 )
@@ -66,7 +61,7 @@ router.post(
 // Route to build add vehicle view (Admin/Employee only)
 router.get(
   "/add-vehicle",
-  utilities.checkJWTToken,
+  utilities.checkLogin, 
   utilities.checkAccountType,
   utilities.handleErrors(invController.addInventory)
 )
@@ -74,7 +69,7 @@ router.get(
 // Route to add vehicle post (Admin/Employee only)
 router.post(
   "/add-vehicle",
-  utilities.checkJWTToken,
+  utilities.checkLogin, 
   utilities.checkAccountType,
   invValidate.inventoryRules(),
   invValidate.checkInventoryData,
@@ -84,7 +79,7 @@ router.post(
 // Route to process inventory update (Admin/Employee only)
 router.post(
   "/update/",
-  utilities.checkJWTToken,
+  utilities.checkLogin, 
   utilities.checkAccountType,
   invValidate.newInventoryRules(),
   invValidate.checkUpdateData,
@@ -94,7 +89,7 @@ router.post(
 // Route to build delete confirmation view (Admin/Employee only)
 router.get(
   "/delete/:inv_id",
-  utilities.checkJWTToken,
+  utilities.checkLogin, 
   utilities.checkAccountType,
   utilities.handleErrors(invController.deleteView)
 )
@@ -102,7 +97,7 @@ router.get(
 // Route to process inventory deletion (Admin/Employee only)
 router.post(
   "/delete/",
-  utilities.checkJWTToken,
+  utilities.checkLogin, 
   utilities.checkAccountType,
   utilities.handleErrors(invController.deleteInventory)
 )

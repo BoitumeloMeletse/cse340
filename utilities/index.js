@@ -158,20 +158,35 @@ Util.buildClassificationList = async (classification_id = null) => {
  **************************************** */
 Util.checkJWTToken = (req, res, next) => {
   if (req.cookies.jwt) {
-    jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET, (err, accountData) => {
-      if (err) {
-        req.flash("notice", "Please log in")
-        res.clearCookie("jwt")
-        return res.redirect("/account/login")
-      }
-      res.locals.accountData = accountData
-      res.locals.loggedin = 1
-      next()
-    })
+    return jwt.verify(
+      req.cookies.jwt,
+      process.env.ACCESS_TOKEN_SECRET,
+      (err, accountData) => {
+        if (err) {
+          req.flash("notice", "Please log in")
+          res.clearCookie("jwt")
+          return res.redirect("/account/login")
+        }
+        res.locals.accountData = accountData
+        res.locals.loggedin = 1
+        next()
+      })
   } else {
     next()
   }
 }
+
+Util.checkAccountType = (req, res, next) => {
+  if (res.locals.accountData && 
+     (res.locals.accountData.account_type === "Employee" 
+   || res.locals.accountData.account_type === "Admin")) {
+    return next()
+  } else {
+    req.flash("notice", "You do not have access to this page.")
+    return res.redirect("/account/login")
+  }
+}
+
 
 
 
