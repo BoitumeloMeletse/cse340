@@ -64,6 +64,39 @@
         </div>
       </div>
     </div>
+     <!-- 🔽 Customer Reviews Section -->
+     <div class="vehicle-reviews">
+      <h3>Customer Reviews</h3>
+
+      <% if (locals.loggedin) { %>
+        <form method="POST" action="/reviews/add">
+          <textarea name="review_text" rows="4" required minlength="5"></textarea>
+          <input type="hidden" name="inv_id" value="<%= vehicle.inv_id %>">
+          <button type="submit">Submit Review</button>
+        </form>
+      <% } else { %>
+        <p><a href="/account/login">Log in</a> to add a review.</p>
+      <% } %>
+
+      <ul>
+        <% reviews.forEach(r => { %>
+          <li>
+            <strong><%= r.account_firstname %> <%= r.account_lastname %>:</strong>
+            <%= r.review_text %> 
+            <em>(<%= r.review_date.toLocaleDateString() %>)</em>
+
+            <% if (locals.accountData && 
+                  (locals.accountData.account_type === "Admin" || locals.accountData.account_type === "Employee")) { %>
+              <form method="POST" action="/reviews/delete" style="display:inline">
+                <input type="hidden" name="review_id" value="<%= r.review_id %>">
+                <input type="hidden" name="inv_id" value="<%= vehicle.inv_id %>">
+                <button type="submit">Delete</button>
+              </form>
+            <% } %>
+          </li>
+        <% }) %>
+      </ul>
+    </div>
   </div>
 </div>
 
@@ -301,4 +334,56 @@
     padding: 12px;
   }
 }
+
+.vehicle-reviews {
+  margin-top: 40px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #00bcd4;
+}
+
+.vehicle-reviews h3 {
+  margin-bottom: 20px;
+  font-size: 1.6rem;
+  color: #333;
+  font-weight: bold;
+}
+
+.vehicle-reviews form {
+  margin-bottom: 20px;
+}
+
+.vehicle-reviews textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.vehicle-reviews button {
+  background: #00bcd4;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.vehicle-reviews button:hover {
+  background: #00838f;
+}
+
+.vehicle-reviews ul {
+  list-style: none;
+  padding: 0;
+}
+
+.vehicle-reviews li {
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
 </style>

@@ -94,14 +94,25 @@ async function accountLogin(req, res) {
       // TEMPORARY: Simple password comparison for testing
       // In production, you should use bcrypt.compare()
       if (account_password === accountData.account_password) {
-        // Store in session
-        req.session.accountData = {
-          account_id: accountData.account_id,
-          account_firstname: accountData.account_firstname,
-          account_lastname: accountData.account_lastname,
-          account_email: accountData.account_email,
-          account_type: accountData.account_type
-        }
+        // Create JWT
+        const token = jwt.sign(
+          {
+            account_id: accountData.account_id,
+            account_firstname: accountData.account_firstname,
+            account_lastname: accountData.account_lastname,
+            account_email: accountData.account_email,
+            account_type: accountData.account_type
+          },
+          process.env.ACCESS_TOKEN_SECRET,
+          { expiresIn: "1h" } // 1-hour expiry
+        )
+      
+        // Send JWT as a cookie
+        res.cookie("jwt", token, {
+          httpOnly: true, // cannot be accessed by JS
+          secure: false,  // set true if using HTTPS
+          sameSite: "strict"
+        })
         
         // Set locals for templates
         res.locals.accountData = req.session.accountData

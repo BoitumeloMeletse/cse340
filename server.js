@@ -41,7 +41,6 @@ app.use(session({
   name: 'sessionId',
   cookie: {
     maxAge: 1000 * 60 * 60, // 1 hour in milliseconds
-    httpOnly: true,
   }
 }));
 
@@ -65,6 +64,17 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 app.use(cookieParser())
 
+// Populate res.locals.loggedin and res.locals.accountData on every request
+app.use((req, res, next) => {
+  if (req.session && req.session.account) {
+    res.locals.loggedin = true
+    res.locals.accountData = req.session.account
+  } else {
+    res.locals.loggedin = false
+  }
+  next()
+})
+
 
 // ✅ Second: Cookies or JWT Middleware
 app.use(utilities.checkJWTToken)
@@ -74,6 +84,13 @@ app.use((req, res, next) => {
   console.log('=== REQUEST DEBUG ===');
   console.log('URL:', req.url);
   console.log('Method:', req.method);
+  console.log("SESSION AFTER LOGIN:", req.session)
+  app.use((req, res, next) => {
+    console.log("SESSION AT REQUEST:", req.session)
+    next()
+  })
+  
+
   console.log('Session ID:', req.sessionID);
   console.log('Session data:', req.session);
   console.log('=====================');

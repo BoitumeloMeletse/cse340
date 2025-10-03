@@ -176,18 +176,6 @@ Util.checkJWTToken = (req, res, next) => {
   }
 }
 
-Util.checkAccountType = (req, res, next) => {
-  if (res.locals.accountData && 
-     (res.locals.accountData.account_type === "Employee" 
-   || res.locals.accountData.account_type === "Admin")) {
-    return next()
-  } else {
-    req.flash("notice", "You do not have access to this page.")
-    return res.redirect("/account/login")
-  }
-}
-
-
 
 
 // ... your existing utility functions ...
@@ -196,17 +184,23 @@ Util.checkAccountType = (req, res, next) => {
  *  Check Login (Session-based)
  * ************************************ */
 Util.checkLogin = (req, res, next) => {
-  console.log("Checking login status..."); // Debug log
-  console.log("Session data:", req.session); // Debug log
-  
-  if (req.session && req.session.accountData) {
-    res.locals.accountData = req.session.accountData
-    res.locals.loggedin = 1
-    console.log("User is logged in:", req.session.accountData.account_email); // Debug log
-    next()
+  if (req.cookies.jwt) {
+    return jwt.verify(
+      req.cookies.jwt,
+      process.env.ACCESS_TOKEN_SECRET,
+      (err, accountData) => {
+        if (err) {
+          req.flash("notice", "Please log in")
+          res.clearCookie("jwt")
+          return res.redirect("/account/login")
+        }
+        res.locals.accountData = accountData
+        res.locals.loggedin = 1
+        next()
+      }
+    )
   } else {
-    console.log("User is NOT logged in"); // Debug log
-    req.flash("notice", "Please log in.")
+    req.flash("notice", "Please log in")
     return res.redirect("/account/login")
   }
 }

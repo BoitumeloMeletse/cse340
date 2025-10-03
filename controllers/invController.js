@@ -1,4 +1,5 @@
 const invModel = require("../models/inventory-model")
+const reviewModel = require("../models/review-model")
 const utilities = require("../utilities/")
 
 const invCont = {}
@@ -32,12 +33,12 @@ invCont.buildByClassificationId = async (req, res, next) => {
 }
 
 /* ***************************
- *  Build inventory detail view (Task 1)
+ *  Build inventory detail view with reviews
  * ************************** */
 invCont.buildByInventoryId = async (req, res, next) => {
   try {
-    const invId = req.params.invId
-    const data = await invModel.getInventoryById(invId)
+    const inv_id = req.params.invId
+    const data = await invModel.getInventoryById(inv_id)
 
     if (!data || data.length === 0) {
       const error = new Error("Vehicle not found")
@@ -46,19 +47,21 @@ invCont.buildByInventoryId = async (req, res, next) => {
     }
 
     const vehicle = data[0]
-    const vehicleHTML = utilities.buildVehicleDetailHTML(vehicle)
+    const reviews = await reviewModel.getReviewsByInvId(inv_id) // <-- fetch reviews
     const nav = await utilities.getNav()
 
     res.render("./inventory/detail", {
       title: `${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}`,
       nav,
-      vehicleHTML,
       vehicle,
+      reviews,   // <-- pass to view
+      errors: null
     })
   } catch (error) {
     next(error)
   }
 }
+
 
 /* ****************************************
  *  Deliver management view
