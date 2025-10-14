@@ -17,7 +17,24 @@
             <span class="price-label">Price:</span>
             <span class="price-amount">$<%= new Intl.NumberFormat("en-US").format(vehicle.inv_price) %></span>
           </div>
-          <button class="own-today-btn">Own Today</button>
+          <div class="price-section">
+            <span class="price-label">Price:</span>
+            <span class="price-amount">$<%= new Intl.NumberFormat("en-US").format(vehicle.inv_price) %></span>
+          </div>
+          
+          <% if (locals.loggedin && locals.accountData.account_type === "Client") { %>
+            <form action="/purchase/buy" method="post" style="margin-top:15px;">
+              <input type="hidden" name="inv_id" value="<%= vehicle.inv_id %>">
+              <button type="submit" class="own-today-btn">Buy Now</button>
+            </form>
+          <% } %>
+          
+          <% if (locals.loggedin && 
+                 (locals.accountData.account_type === "Admin" || locals.accountData.account_type === "Employee")) { %>
+            <div style="margin-top:15px;">
+              <a href="/purchase/view/<%= vehicle.inv_id %>" class="btn-admin">View Purchases</a>
+            </div>
+          <% } %>
         </div>
         <div class="vehicle-image-section">
           <img src="<%= vehicle.inv_image %>" alt="<%= vehicle.inv_year %> <%= vehicle.inv_make %> <%= vehicle.inv_model %>" class="vehicle-main-image">
@@ -385,5 +402,20 @@
   border-bottom: 1px solid #ddd;
   padding-bottom: 10px;
 }
+
+.btn-admin {
+  display: inline-block;
+  background: #f57c00;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-left: 10px;
+}
+.btn-admin:hover {
+  background: #e65100;
+}
+
 
 </style>

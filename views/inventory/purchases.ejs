@@ -1,0 +1,23 @@
+<div class="cse-container">
+    <h1>Purchases for Vehicle</h1>
+  
+    <% if (purchases.length > 0) { %>
+      <table>
+        <tr>
+          <th>Customer</th>
+          <th>Email</th>
+          <th>Date</th>
+        </tr>
+        <% purchases.forEach(p => { %>
+          <tr>
+            <td><%= p.account_firstname %> <%= p.account_lastname %></td>
+            <td><%= p.account_email %></td>
+            <td><%= new Date(p.purchase_date).toLocaleDateString() %></td>
+          </tr>
+        <% }) %>
+      </table>
+    <% } else { %>
+      <p>No purchases yet for this vehicle.</p>
+    <% } %>
+  </div>
+  

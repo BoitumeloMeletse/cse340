@@ -14,6 +14,7 @@ const baseController = require("./controllers/baseController")
 const utilities = require("./utilities/")
 const inventoryRoute = require("./routes/inventoryRoute")
 const accountRoute = require("./routes/accountRoute")
+const purchaseRoute = require("./routes/purchaseRoute")
 const session = require("express-session")
 const pool = require('./database/')
 const bodyParser = require("body-parser")
@@ -111,7 +112,9 @@ app.get("/", (req, res) => {
 // Inventory routes
 app.use("/inv", inventoryRoute)
 
-// Account routes 
+// Purchase routes 
+app.use("/purchase", purchaseRoute)
+
 //app.use("/account", accountRoute)
 app.use("/account", require("./routes/accountRoute"))
 
